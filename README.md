@@ -64,7 +64,7 @@
 | **A07** Authentication Failures | 9/10 | ✅ Política de senha forte |
 | **A09** Logging Failures | 9/10 | ✅ Logs LGPD/GDPR compliant |
 
-[📊 Ver auditoria completa](AUDITORIA_OWASP.md)
+[📊 Ver auditoria completa](docs/security/SECURITY.md#-auditoria-owasp-top-10)
 
 ### 🚦 Rate Limiting
 
@@ -251,7 +251,7 @@ npm run db:test
 ℹ️ Host: postgres.railway.internal
 ```
 
-**Documentação completa:** [SETUP_POSTGRESQL.md](SETUP_POSTGRESQL.md)
+**Documentação completa:** [docs/guides/POSTGRESQL.md](docs/guides/POSTGRESQL.md)
 
 ---
 
@@ -282,14 +282,14 @@ Validação em 6 passos:
 5. Verificar se conta está ativa
 6. Verificar se senha mudou
 
-**Documentação:** [SEGURANCA_JWT.md](SEGURANCA_JWT.md)
+**Documentação:** [docs/security/SECURITY.md](docs/security/SECURITY.md#-autenticação-jwt)
 
 #### 3. Rate Limiting (99.99% proteção)
 
 - **Sem rate limit**: Senha fraca quebrada em **17 minutos**
 - **COM rate limit**: Mesma senha leva **5,7 ANOS**
 
-**Análise matemática:** [RATE_LIMITING.md](RATE_LIMITING.md)
+**Análise matemática:** [docs/security/SECURITY.md](docs/security/SECURITY.md#-rate-limiting)
 
 #### 4. Bcrypt 12 Rounds (9/10)
 
@@ -309,7 +309,7 @@ router.get('/admin/users', protect, restrictTo('admin'), getAllUsers);
 router.put('/me', protect, checkOwnership('user'), updateMe);
 ```
 
-**Documentação:** [BROKEN_ACCESS_CONTROL.md](BROKEN_ACCESS_CONTROL.md)
+**Documentação:** [docs/security/ACCESS_CONTROL.md](docs/security/ACCESS_CONTROL.md)
 
 #### 6. Logs de Auditoria (9/10)
 
@@ -318,13 +318,13 @@ logger.info('[AUTH] Login bem-sucedido | Email: usuario@example.com | IP: 192.16
 logger.warn('[AUTH] Login falhou | Email: usuario@example.com | Tentativa: 3/5');
 ```
 
-**Exemplos:** [LOGS_PRODUCAO.md](LOGS_PRODUCAO.md)
+**Exemplos:** [docs/monitoring/AUDIT_LOGS.md](docs/monitoring/AUDIT_LOGS.md)
 
 ### Auditoria OWASP
 
 **Nota geral: 8.7/10** ✅
 
-[📊 Ver relatório completo](AUDITORIA_OWASP.md)
+[📊 Ver relatório completo](docs/security/SECURITY.md#-auditoria-owasp-top-10)
 
 ---
 
@@ -607,7 +607,7 @@ CREATE INDEX idx_users_email ON users(email);
 EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'joao@example.com';
 ```
 
-**Mais soluções:** [COMO-TESTAR.md](COMO-TESTAR.md)
+**Mais soluções:** [docs/guides/TESTING.md](docs/guides/TESTING.md)
 
 ---
 
@@ -615,45 +615,30 @@ EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'joao@example.com';
 
 ### 🔒 Segurança
 
-- [AUDITORIA_OWASP.md](AUDITORIA_OWASP.md) - Auditoria OWASP Top 10 completa
-- [RESUMO_OWASP.md](RESUMO_OWASP.md) - Resumo visual da auditoria
-- [CHECKLIST_SEGURANCA.md](CHECKLIST_SEGURANCA.md) - 18 ações prioritizadas
-- [BROKEN_ACCESS_CONTROL.md](BROKEN_ACCESS_CONTROL.md) - Controle de permissões (A01)
-- [RATE_LIMITING.md](RATE_LIMITING.md) - Proteção brute force (A04)
-- [SEGURANCA_JWT.md](SEGURANCA_JWT.md) - Autenticação JWT completa
-- [SEGURANCA_LOGIN.md](SEGURANCA_LOGIN.md) - Segurança da rota de login
-- [SEGURANCA_CADASTRO.md](SEGURANCA_CADASTRO.md) - Segurança da rota de cadastro
+- [docs/security/SECURITY.md](docs/security/SECURITY.md) - Guia completo de segurança (OWASP, JWT, Rate Limiting)
+- [docs/security/ACCESS_CONTROL.md](docs/security/ACCESS_CONTROL.md) - Controle de permissões e RBAC
+- [docs/security/SECURITY_CHECKLIST.md](docs/security/SECURITY_CHECKLIST.md) - Checklist de segurança pré-deploy
 
 ### 📊 Auditoria e Logs
 
-- [AUDITORIA.md](AUDITORIA.md) - Logs de autenticação e compliance
-- [RESUMO_AUDITORIA.md](RESUMO_AUDITORIA.md) - Resumo executivo de logs
-- [LOGS_PRODUCAO.md](LOGS_PRODUCAO.md) - Exemplos de logs em produção
-- [IMPLEMENTACAO_LOGS.md](IMPLEMENTACAO_LOGS.md) - Onde os logs foram implementados
+- [docs/monitoring/AUDIT_LOGS.md](docs/monitoring/AUDIT_LOGS.md) - Sistema completo de logs e auditoria
 
 ### 🛠️ Guias Técnicos
 
-- [SETUP_POSTGRESQL.md](SETUP_POSTGRESQL.md) - Configuração PostgreSQL completa
-- [POSTGRESQL_RESUMO.md](POSTGRESQL_RESUMO.md) - Resumo rápido PostgreSQL
+- [docs/guides/POSTGRESQL.md](docs/guides/POSTGRESQL.md) - Configuração PostgreSQL completa
+- [docs/guides/INTEGRATION.md](docs/guides/INTEGRATION.md) - Integração com API (HTML + React)
+- [docs/guides/USER_MODEL.md](docs/guides/USER_MODEL.md) - Documentação do modelo User
+- [docs/guides/TESTING.md](docs/guides/TESTING.md) - Guia de testes
 - [QUICK_START.md](QUICK_START.md) - Início rápido (5 minutos)
-- [MODELO_USER.md](MODELO_USER.md) - Documentação do modelo User
-- [COMO-TESTAR.md](COMO-TESTAR.md) - Guia de testes
 
 ### 🎨 Frontend e Integração
 
-- [INTEGRATION.md](INTEGRATION.md) - Integração com API (HTML + React)
+- [public/docs/UX_DECISIONS.md](public/docs/UX_DECISIONS.md) - Decisões de UX/UI (Login + Cadastro)
+- [public/README.md](public/README.md) - Documentação das interfaces web
 - [react-login/ARCHITECTURE.md](react-login/ARCHITECTURE.md) - Arquitetura React
 - [react-login/README.md](react-login/README.md) - Sistema React - Guia de uso
-- [public/UX_UI_DECISIONS.md](public/UX_UI_DECISIONS.md) - Decisões de UX/UI
-- [public/REGISTER_UX.md](public/REGISTER_UX.md) - UX da página de cadastro
 
-### 🔐 Middlewares e JWT
 
-- [RESUMO_MIDDLEWARE_JWT.md](RESUMO_MIDDLEWARE_JWT.md) - Middleware auth
-- [COMO_USAR_JWT.md](COMO_USAR_JWT.md) - Guia prático de JWT
-- [RESUMO_AUTH.md](RESUMO_AUTH.md) - Resumo de autenticação
-- [RESUMO_PERMISSOES.md](RESUMO_PERMISSOES.md) - Como funciona RBAC
-- [RESUMO_RATE_LIMITING.md](RESUMO_RATE_LIMITING.md) - Resumo de rate limiting
 
 ---
 
