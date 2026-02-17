@@ -27,7 +27,16 @@
 
 ---
 
-## 📋 Índice
+## �️ Navegação Rápida
+
+**Novo no projeto?** Comece aqui:
+
+📑 **[DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md)** - Índice completo de toda documentação organizada por categoria  
+🎯 **[PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md)** - Visão geral do projeto com diagramas visuais da arquitetura
+
+---
+
+## �📋 Índice
 
 - [Recursos](#-recursos)
 - [Quick Start](#-quick-start)
@@ -613,7 +622,12 @@ EXPLAIN ANALYZE SELECT * FROM users WHERE email = 'joao@example.com';
 
 ## 📖 Documentação
 
-### 🔒 Segurança
+### � Comece Aqui
+
+- [DOCUMENTATION_INDEX.md](DOCUMENTATION_INDEX.md) - 📑 **Índice navegável completo** de toda documentação
+- [PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md) - 🎯 **Visão geral visual** com diagramas de arquitetura
+
+### �🔒 Segurança
 
 - [docs/security/SECURITY.md](docs/security/SECURITY.md) - Guia completo de segurança (OWASP, JWT, Rate Limiting)
 - [docs/security/ACCESS_CONTROL.md](docs/security/ACCESS_CONTROL.md) - Controle de permissões e RBAC
