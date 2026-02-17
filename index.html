@@ -1,12 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Sistema de Login</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login seguro - Secure Auth System">
+    <title>Login - Secure Auth System</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <h1>Sistema de Login</h1>
-  <p>Página inicial do frontend.</p>
-  <a href="login.html">Ir para Login</a>
+    <!-- Background com gradiente animado -->
+    <div class="background-gradient"></div>
+    
+    <!-- Container principal -->
+    <div class="login-container">
+        <!-- Card de login -->
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <div class="logo" id="lock-logo">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="48" height="48" rx="12" fill="url(#gradient)"/>
+                        <!-- Corpo do cadeado (fixo) -->
+                        <path d="M14 24V34H34V24H14ZM24 27C25.1 27 26 27.9 26 29C26 30.1 25.1 31 24 31C22.9 31 22 30.1 22 29C22 27.9 22.9 27 24 27Z" fill="white"/>
+                        <!-- Arco do cadeado (animável) -->
+                        <path class="lock-shackle" d="M24 14C19.58 14 16 17.58 16 22V24H18V22C18 18.69 20.69 16 24 16C27.31 16 30 18.69 30 22V24H32V22C32 17.58 28.42 14 24 14Z" fill="white"/>
+                        <defs>
+                            <linearGradient id="gradient" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#6366F1"/>
+                                <stop offset="1" stop-color="#8B5CF6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1>Bem-vindo de volta</h1>
+                <p class="subtitle">Entre com suas credenciais para continuar</p>
+            </div>
+
+            <!-- Alertas de erro/sucesso -->
+            <div id="alert-container"></div>
+
+            <!-- Formulário -->
+            <form id="login-form" class="login-form" novalidate>
+                <!-- Campo Email -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2.5 4.5L8 8.5L13.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                        Email
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="seu@email.com"
+                        autocomplete="email"
+                        required
+                        aria-describedby="email-error"
+                    >
+                    <span id="email-error" class="error-message" role="alert"></span>
+                </div>
+
+                <!-- Campo Senha -->
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="7" width="10" height="7" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M5 7V5C5 3.34315 6.34315 2 8 2C9.65685 2 11 3.34315 11 5V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            <circle cx="8" cy="10.5" r="1" fill="currentColor"/>
+                        </svg>
+                        Senha
+                    </label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="••••••••"
+                            autocomplete="current-password"
+                            required
+                            aria-describedby="password-error"
+                        >
+                        <button type="button" class="toggle-password" aria-label="Mostrar senha" tabindex="-1">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" class="eye-icon">
+                                <path d="M10 4C5.33 4 1.67 7.33 1.67 10C1.67 12.67 5.33 16 10 16C14.67 16 18.33 12.67 18.33 10C18.33 7.33 14.67 4 10 4ZM10 14C7.79 14 6 12.21 6 10C6 7.79 7.79 6 10 6C12.21 6 14 7.79 14 10C14 12.21 12.21 14 10 14ZM10 7.5C8.62 7.5 7.5 8.62 7.5 10C7.5 11.38 8.62 12.5 10 12.5C11.38 12.5 12.5 11.38 12.5 10C12.5 8.62 11.38 7.5 10 7.5Z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span id="password-error" class="error-message" role="alert"></span>
+                </div>
+
+                <!-- Lembrar-me e Esqueci senha -->
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="remember-me" name="remember">
+                        <span class="checkbox-custom"></span>
+                        <span>Lembrar-me</span>
+                    </label>
+                    <a href="forgot-password.html" class="forgot-password">Esqueceu a senha?</a>
+                </div>
+
+                <!-- Botão de Login -->
+                <button type="submit" class="btn-login" id="btn-login">
+                    <span class="btn-text">Entrar</span>
+                    <span class="btn-loader" style="display: none;">
+                        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2" fill="none" opacity="0.3"/>
+                            <path d="M10 2C5.58 2 2 5.58 2 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round">
+                                <animateTransform attributeName="transform" type="rotate" from="0 10 10" to="360 10 10" dur="1s" repeatCount="indefinite"/>
+                            </path>
+                        </svg>
+                    </span>
+                </button>
+            </form>
+
+            <!-- Separador -->
+            <div class="divider">
+                <span>ou</span>
+            </div>
+
+            <!-- Cadastro -->
+            <div class="signup-section">
+                <p>Não tem uma conta?</p>
+                <a href="register.html" class="btn-signup">Criar conta gratuita</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
 </body>
 </html>
