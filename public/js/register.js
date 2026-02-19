@@ -629,12 +629,12 @@ function init() {
   console.log('📝 Página de cadastro carregada');
   
   // Verificar se já está logado
-  const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-  if (token) {
-    console.log('Usuário já autenticado, redirecionando...');
-    window.location.href = '/dashboard.html';
-    return;
-  }
+  const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
+if (token) {
+  window.location.href = 'dashboard.html';
+  return;
+}
+
   
   // Inicializar event listeners
   initEventListeners();
