@@ -11,7 +11,7 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Armazenamento temporário em memória
 const users = [];
@@ -21,7 +21,7 @@ app.use(helmet({
   contentSecurityPolicy: false, // Desabilitar CSP para desenvolvimento
 }));
 app.use(cors({
-  origin: ['http://localhost:5500', 'http://127.0.0.1:5500', 'http://localhost:3000', 'http://localhost:5000'],
+  origin: process.env.CORS_ORIGIN || true,
   credentials: true
 }));
 app.use(express.json());
@@ -184,8 +184,7 @@ app.listen(PORT, () => {
   console.log('\n🚀 ========================================');
   console.log(`   SERVIDOR SIMPLIFICADO RODANDO`);
   console.log(`   Porta: ${PORT}`);
-  console.log(`   URL: http://localhost:${PORT}`);
-  console.log(`   Health: http://localhost:${PORT}/health`);
+
   console.log('========================================\n');
   console.log('ℹ️  Esse servidor usa memória RAM (dados são perdidos ao reiniciar)');
   console.log('ℹ️  Para produção, configure PostgreSQL e use server.js\n');

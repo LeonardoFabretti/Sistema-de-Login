@@ -42,7 +42,7 @@ app.use(helmet({
 
 // CORS: Controle de origem cruzada
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5000',
+  origin: process.env.CORS_ORIGIN || true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']

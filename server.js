@@ -25,8 +25,8 @@ const startServer = async () => {
     
     // Iniciar servidor Express
     app.listen(PORT, () => {
-      logger.info(`🚀 Servidor rodando em modo ${process.env.NODE_ENV} na porta ${PORT}`);
-      logger.info(`🔗 Health check: http://localhost:${PORT}/health`);
+      logger.info(`🚀 Servidor rodando em modo ${process.env.NODE_ENV || 'development'} na porta ${PORT}`);
+      logger.info(`🔗 Servidor iniciado com sucesso`);
     });
   } catch (error) {
     logger.error('❌ Erro ao iniciar servidor:', error);

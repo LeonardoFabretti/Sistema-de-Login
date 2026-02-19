@@ -14,7 +14,7 @@
 // ==========================================
 
 const CONFIG = {
-    API_URL: 'http://localhost:5000/api/auth/login',
+    API_URL: '/api/auth/login',
     MAX_LOGIN_ATTEMPTS: 5,
     LOCKOUT_DURATION: 15 * 60 * 1000, // 15 minutos em ms
     MIN_PASSWORD_LENGTH: 8,
