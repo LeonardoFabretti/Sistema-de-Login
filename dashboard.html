@@ -1,1 +1,500 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard - Sistema de Autenticação">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;">
+    <title>Dashboard - Bem-vindo!</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, 
+                #7C3AED 0%,
+                #A855F7 25%,
+                #D946EF 50%,
+                #EC4899 75%,
+                #F97316 100%
+            );
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.4),
+                        0 20px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #A855F7, #D946EF);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #1f2937;
+            margin-bottom: 12px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-name {
+            font-size: 1.25rem;
+            color: #A855F7;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        p {
+            color: #6b7280;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #A855F7, #D946EF, #EC4899);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5),
+                        0 4px 15px rgba(168, 85, 247, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.7),
+                        0 8px 25px rgba(168, 85, 247, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .info-box {
+            background: rgba(168, 85, 247, 0.1);
+            border-left: 4px solid #A855F7;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 32px;
+            text-align: left;
+        }
+
+        .info-box strong {
+            color: #A855F7;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            color: #4b5563;
+            font-size: 0.9rem;
+            padding: 4px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .info-box li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #A855F7;
+            font-weight: bold;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 24px;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 1.625rem;
+            }
+
+            .success-icon {
+                width: 70px;
+                height: 70px;
+            }
+
+            .success-icon svg {
+                width: 35px;
+                height: 35px;
+            }
+
+            .user-name {
+                font-size: 1.125rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 32px 20px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .success-icon {
+                width: 64px;
+                height: 64px;
+            }
+
+            .success-icon svg {
+                width: 32px;
+                height: 32px;
+            }
+
+            .user-name {
+                font-size: 1rem;
+            }
+
+            .user-email {
+                font-size: 0.85rem;
+            }
+
+            p {
+                font-size: 0.9375rem;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 0.9375rem;
+                width: 100%;
+            }
+
+            .info-box {
+                padding: 12px;
+                margin-top: 24px;
+            }
+
+            .info-box li {
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            h1 {
+                font-size: 1.375rem;
+            }
+
+            .success-icon {
+                width: 56px;
+                height: 56px;
+                margin-bottom: 16px;
+            }
+
+            .success-icon svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        /* Landscape em celulares */
+        @media (max-height: 600px) and (orientation: landscape) {
+            body {
+                padding: 12px;
+            }
+
+            .container {
+                padding: 24px 20px;
+                margin: 12px 0;
+            }
+
+            .success-icon {
+                width: 48px;
+                height: 48px;
+                margin-bottom: 12px;
+            }
+
+            .success-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+                margin-bottom: 8px;
+            }
+
+            .user-name {
+                font-size: 0.9375rem;
+                margin-bottom: 4px;
+            }
+
+            .user-email {
+                font-size: 0.8125rem;
+                margin-bottom: 12px;
+            }
+
+            p {
+                font-size: 0.875rem;
+                margin-bottom: 16px;
+            }
+
+            .info-box {
+                margin-top: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+
+        <h1>Login realizado com sucesso!</h1>
+        <p class="user-name" id="user-name">Carregando...</p>
+        <p class="user-email" id="user-email"></p>
+        
+        <p>
+            Você está autenticado no sistema. 🎉<br>
+            Seu token JWT está ativo e seguro.
+        </p>
+
+        <button class="btn" id="logoutBtn">Sair da Conta</button>
+        
+        <p style="margin-top: 16px; font-size: 0.875rem; color: #6b7280;">
+            Ou <a href="#" id="loginLink" style="color: #A855F7; text-decoration: none; font-weight: 600; cursor: pointer;">voltar ao login</a>
+        </p>
+
+        <div class="info-box">
+            <strong>📋 Sua conta possui:</strong>
+            <ul>
+                <li>Autenticação JWT ativa</li>
+                <li>Sessão segura com token</li>
+                <li>Proteção com bcrypt (12 rounds)</li>
+                <li>Dados em memória (servidor simplificado)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * VERIFICAÇÃO DE AUTENTICAÇÃO
+         * -----------------------------
+         * Esta função roda assim que a página carrega.
+         * Verifica se existe um token JWT válido no navegador.
+         * Se não existir, redireciona automaticamente para login.
+         * 
+         * Por que isso é importante?
+         * - Impede acesso não autorizado à área logada
+         * - Melhora a segurança do sistema
+         * - Garante que apenas usuários autenticados vejam esta página
+         */
+        function checkAuthentication() {
+            console.log('🔍 Verificando autenticação...');
+            
+            // Buscar token em localStorage ("lembrar-me") ou sessionStorage (sessão temporária)
+            const token = localStorage.getItem('accessToken') || sessionStorage.getItem('accessToken');
+            const userDataStr = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+            
+            console.log('Token encontrado:', !!token);
+            console.log('UserData encontrado:', !!userDataStr);
+            
+            // Se não há token, usuário não está logado
+            if (!token) {
+                console.log('❌ Token não encontrado. Redirecionando para login...');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Se há dados do usuário salvos, exibir
+            if (userDataStr) {
+                try {
+                    const userData = JSON.parse(userDataStr);
+                    console.log('✅ Dados do usuário:', userData);
+                    const userNameEl = document.getElementById('user-name');
+                    const userEmailEl = document.getElementById('user-email');
+                    
+                    if (userNameEl) {
+                        userNameEl.textContent = `Bem-vindo(a), ${userData.name || userData.username || 'Usuário'}!`;
+                    }
+                    if (userEmailEl) {
+                        userEmailEl.textContent = userData.email || '';
+                    }
+                    console.log('✅ Usuário autenticado:', userData.email);
+                } catch (e) {
+                    console.error('Erro ao carregar dados do usuário:', e);
+                    const userNameEl = document.getElementById('user-name');
+                    if (userNameEl) {
+                        userNameEl.textContent = 'Bem-vindo(a)!';
+                    }
+                }
+            } else {
+                // Fallback: tentar decodificar o JWT (menos seguro, mas funciona)
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    console.log('📦 Payload do token:', payload);
+                    const userName = payload.name || payload.username || payload.email?.split('@')[0] || 'Usuário';
+                    const userNameEl = document.getElementById('user-name');
+                    const userEmailEl = document.getElementById('user-email');
+                    
+                    if (userNameEl) {
+                        userNameEl.textContent = `Bem-vindo(a), ${userName}!`;
+                    }
+                    if (payload.email && userEmailEl) {
+                        userEmailEl.textContent = payload.email;
+                    }
+                } catch (e) {
+                    console.error('❌ Erro ao decodificar token:', e);
+                    const userNameEl = document.getElementById('user-name');
+                    if (userNameEl) {
+                        userNameEl.textContent = 'Bem-vindo(a)!';
+                    }
+                }
+            }
+        }
+
+        /**
+         * FUNÇÃO DE LOGOUT
+         * ----------------
+         * Limpa todos os dados de autenticação do navegador:
+         * - Remove o token JWT
+         * - Remove dados do usuário
+         * - Redireciona para a página de login
+         * 
+         * Isso garante que:
+         * - O usuário não consegue mais acessar páginas protegidas
+         * - Tokens antigos não ficam armazenados
+         * - Logout completo e seguro
+         */
+        function logout() {
+            console.log('🔓 Fazendo logout...');
+            
+            // Remover do localStorage ("lembrar-me")
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('userData');
+            
+            // Remover do sessionStorage (sessão temporária)
+            sessionStorage.removeItem('accessToken');
+            sessionStorage.removeItem('userData');
+            
+            console.log('✅ Logout completo. Redirecionando...');
+            
+            // Força redirecionamento (evita cache)
+            window.location.replace('login.html');
+        }
+
+        // Event listener para botão de logout
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM carregado, configurando event listeners...');
+            
+            // Executar verificação ao carregar a página
+            checkAuthentication();
+            
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loginLink = document.getElementById('loginLink');
+            
+            console.log('Botão logout encontrado:', !!logoutBtn);
+            console.log('Link login encontrado:', !!loginLink);
+            
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔘 Botão logout clicado');
+                    logout();
+                });
+            }
+            
+            if (loginLink) {
+                loginLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('🔗 Link login clicado');
+                    logout();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
 
