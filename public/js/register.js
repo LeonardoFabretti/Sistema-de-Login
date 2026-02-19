@@ -448,18 +448,12 @@ async function submitRegister(data) {
       // Sucesso
       showAlert('✓ Conta criada com sucesso! Redirecionando...', 'success');
       
-      // Salvar token e dados do usuário (já está autenticado!)
-      if (result.data && result.data.accessToken) {
-        localStorage.setItem('accessToken', result.data.accessToken);
-        if (result.data.user) {
-          localStorage.setItem('userData', JSON.stringify(result.data.user));
-        }
-      }
-      
-      // Redirecionar para dashboard após 2 segundos (já autenticado)
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 2000);
+     showAlert('✓ Conta criada com sucesso! Faça login para continuar.', 'success');
+
+setTimeout(() => {
+  window.location.href = 'index.html'; // página de login
+}, 1500);
+
       
     } else {
       // Erro do servidor
