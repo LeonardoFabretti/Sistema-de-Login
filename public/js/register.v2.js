@@ -18,7 +18,7 @@
    =================================== */
 
 const CONFIG = {
-  API_URL: '/api/auth/register',
+  API_URL: 'https://empowering-solace-production-c913.up.railway.app/api/auth/register',
   MIN_NAME_LENGTH: 3,
   MIN_PASSWORD_LENGTH: 8,
 };
