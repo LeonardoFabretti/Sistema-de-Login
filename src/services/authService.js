@@ -30,22 +30,30 @@ const logger = require('../utils/logger');
  */
 const registerUser = async ({ name, email, password }) => {
   try {
+    console.log('[AUTH SERVICE] Iniciando registro de usuário...');
+    console.log('[AUTH SERVICE] Dados recebidos:', { name, email, passwordLength: password?.length });
+    
     // 1. Criar usuário no banco
     // SEGURANÇA: User.create já:
     // - Verifica se email existe
     // - Hasheia a senha
     // - Normaliza email (lowercase)
+    console.log('[AUTH SERVICE] Chamando User.create...');
     const user = await User.create({
       name,
       email,
       password, // Será hasheada automaticamente
       role: 'user',
     });
-    
+    console.log('[AUTH SERVICE] Usuário criado com sucesso:', user.id);
+   
     // 2. Gerar tokens JWT
     // SEGURANÇA: Token contém userId e role (para controle de acesso)
+    console.log('[AUTH SERVICE] Gerando access token...');
     const accessToken = tokenService.generateAccessToken(user.id, user.role);
+    console.log('[AUTH SERVICE] Gerando refresh token...');
     const refreshToken = await tokenService.generateRefreshToken(user.id);
+    console.log('[AUTH SERVICE] Tokens gerados com sucesso');
     
     // 3. Logar evento de segurança
     // AUDITORIA: Registro de novo usuário para rastreamento
@@ -58,7 +66,9 @@ const registerUser = async ({ name, email, password }) => {
       refreshToken,
     };
   } catch (error) {
-    logger.error('Erro ao registrar usuário:', error.message);
+    console.error('[AUTH SERVICE] ERRO:', error);
+    console.error('[AUTH SERVICE] Stack:', error.stack);
+    logger.error('Erro ao registrar usuário', error);
     throw error;
   }
 };

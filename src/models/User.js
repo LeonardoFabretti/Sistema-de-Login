@@ -44,35 +44,52 @@ const { bcryptRounds, loginRateLimit } = require('../config/security');
  */
 const create = async ({ name, email, password, role = 'user' }) => {
   try {
+    console.log('[USER MODEL] Iniciando criação de usuário...');
+    console.log('[USER MODEL] Dados recebidos:', { name, email, role, passwordLength: password?.length });
+    
     // 1. Normalizar email (lowercase)
     const normalizedEmail = email.toLowerCase().trim();
+    console.log('[USER MODEL] Email normalizado:', normalizedEmail);
     
     // 2. Verificar se email já existe
+    console.log('[USER MODEL] Verificando se email já existe...');
     const existingUser = await findByEmail(normalizedEmail);
     if (existingUser) {
+      console.log('[USER MODEL] Email já existe:', normalizedEmail);
       const error = new Error('Email já está em uso');
       error.code = 'DUPLICATE_EMAIL';
       error.statusCode = 409;
       throw error;
     }
+    console.log('[USER MODEL] Email disponível');
     
     // 3. Hash da senha com bcrypt
     // SEGURANÇA: bcrypt com salt rounds (custo computacional)
     // Quanto maior, mais seguro mas mais lento (12 é recomendado)
+    console.log('[USER MODEL] Hasheando senha com bcrypt (rounds=' + bcryptRounds + ')...');
     const hashedPassword = await bcrypt.hash(password, bcryptRounds);
+    console.log('[USER MODEL] Senha hasheada com sucesso');
     
     // 4. Inserir usuário no banco
     // SEGURANÇA: Prepared statement ($1, $2, $3, $4) previne SQL Injection
+    console.log('[USER MODEL] Executando INSERT no banco de dados...');
     const result = await query(
       `INSERT INTO users (name, email, password, role, is_active, is_email_verified)
        VALUES ($1, $2, $3, $4, true, false)
        RETURNING id, name, email, role, is_active, is_email_verified, created_at, updated_at`,
       [name, normalizedEmail, hashedPassword, role]
     );
+    console.log('[USER MODEL] INSERT executado com sucesso');
+    console.log('[USER MODEL] Usuário criado:', result.rows[0]?.id);
     
     // 5. Retornar usuário criado (SEM a senha por segurança)
     return result.rows[0];
   } catch (error) {
+    console.error('[USER MODEL] ERRO ao criar usuário:', error);
+    console.error('[USER MODEL] Error code:', error.code);
+    console.error('[USER MODEL] Error message:', error.message);
+    console.error('[USER MODEL] Stack:', error.stack);
+    
     // Tratamento de erro de duplicação do PostgreSQL
     if (error.code === '23505') { // Unique violation
       const duplicateError = new Error('Email já está em uso');

@@ -36,7 +36,27 @@ const { cookieOptions } = require('../config/jwt');
  */
 const register = async (req, res, next) => {
   try {
+    console.log('[AUTH CONTROLLER] ===== INÍCIO DO REGISTRO =====');
+    console.log('[AUTH CONTROLLER] req.body:', req.body);
+    
     const { name, email, password } = req.body;
+    
+    console.log('[AUTH CONTROLLER] Dados extraídos:', { 
+      name, 
+      email, 
+      hasPassword: !!password, 
+      passwordLength: password?.length 
+    });
+    
+    // Validação básica
+    if (!name || !email || !password) {
+      console.error('[AUTH CONTROLLER] Dados faltando:', { name: !!name, email: !!email, password: !!password });
+      return res.status(400).json({
+        success: false,
+        message: 'Nome, email e senha são obrigatórios',
+        data: { name: !!name, email: !!email, password: !!password }
+      });
+    }
     
     // Chamar service de registro
     // O service irá:
@@ -45,7 +65,9 @@ const register = async (req, res, next) => {
     // 3. Salvar usuário no banco
     // 4. Gerar tokens JWT
     // 5. Logar evento
+    console.log('[AUTH CONTROLLER] Chamando authService.registerUser...');
     const result = await authService.registerUser({ name, email, password });
+    console.log('[AUTH CONTROLLER] authService.registerUser retornou com sucesso');
     
     // Definir cookies com tokens
     // httpOnly: true - Previne acesso via JavaScript (XSS)
@@ -57,6 +79,7 @@ const register = async (req, res, next) => {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
     });
     
+    console.log('[AUTH CONTROLLER] Enviando resposta 201...');
     res.status(201).json({
       success: true,
       message: 'Usuário registrado com sucesso',
@@ -65,7 +88,14 @@ const register = async (req, res, next) => {
         accessToken: result.accessToken,
       }
     });
+    console.log('[AUTH CONTROLLER] ===== FIM DO REGISTRO (SUCESSO) =====');
   } catch (error) {
+    console.error('[AUTH CONTROLLER] ===== ERRO NO REGISTRO =====');
+    console.error('[AUTH CONTROLLER] Error:', error);
+    console.error('[AUTH CONTROLLER] Error message:', error.message);
+    console.error('[AUTH CONTROLLER] Error code:', error.code);
+    console.error('[AUTH CONTROLLER] Error statusCode:', error.statusCode);
+    console.error('[AUTH CONTROLLER] Stack:', error.stack);
     next(error);
   }
 };
