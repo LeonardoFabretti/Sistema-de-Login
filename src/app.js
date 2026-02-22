@@ -46,6 +46,12 @@ const allowedOrigins = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
   : ['http://localhost:5000', 'http://127.0.0.1:5000'];
 
+// Log da configuração CORS na inicialização
+console.log('🔐 CORS Configuration:');
+console.log(`   NODE_ENV: ${process.env.NODE_ENV || 'NOT_SET'}`);
+console.log(`   CORS_ORIGIN env: ${process.env.CORS_ORIGIN || 'NOT_SET (using fallback)'}`);
+console.log(`   Allowed Origins:`, allowedOrigins);
+
 app.use(cors({
   origin: function (origin, callback) {
     // Permitir requisições sem origin (mobile apps, Postman, etc)
@@ -53,10 +59,12 @@ app.use(cors({
     
     if (allowedOrigins.indexOf(origin) !== -1) {
       // Origem está na lista permitida
+      console.log(`✅ CORS: Origin ${origin} allowed`);
       callback(null, true);
     } else {
       // Origem não permitida
-      console.warn(`❌ CORS blocked: Origin ${origin} not allowed`);
+      console.warn(`❌ CORS BLOCKED: Origin "${origin}" not in allowed list: [${allowedOrigins.join(', ')}]`);
+      console.warn(`⚠️  To fix: Set CORS_ORIGIN environment variable in Railway to include: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -103,6 +111,20 @@ app.get('/', (req, res) => {
 // Health check
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Servidor funcionando' });
+});
+
+// CORS Debug - Verificar configuração
+app.get('/api/cors-debug', (req, res) => {
+  res.status(200).json({
+    success: true,
+    corsConfig: {
+      allowedOrigins: allowedOrigins,
+      corsOriginEnv: process.env.CORS_ORIGIN || 'NOT_SET',
+      nodeEnv: process.env.NODE_ENV || 'NOT_SET',
+      requestOrigin: req.get('origin') || 'NO_ORIGIN'
+    },
+    message: 'Se allowedOrigins não contém seu domínio, configure CORS_ORIGIN no Railway'
+  });
 });
 
 // Rotas da aplicação
