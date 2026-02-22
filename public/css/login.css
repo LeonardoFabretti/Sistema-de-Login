@@ -268,6 +268,161 @@ h1 {
 }
 
 /* ==========================================
+   INFO BOX (Forgot Password)
+========================================== */
+.info-box {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #ede9fe 0%, #f5f3ff 100%);
+  border: 1.5px solid #d8b4fe;
+  border-radius: 12px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.info-box svg {
+  flex-shrink: 0;
+  color: #7c3aed;
+  margin-top: 2px;
+}
+
+.info-box > div {
+  flex: 1;
+}
+
+.info-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b21a8;
+  margin-bottom: 8px;
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.info-list li {
+  font-size: 0.8125rem;
+  color: #6b21a8;
+  padding-left: 16px;
+  position: relative;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.info-list li:last-child {
+  margin-bottom: 0;
+}
+
+.info-list li::before {
+  content: "•";
+  position: absolute;
+  left: 4px;
+  color: #7c3aed;
+  font-weight: bold;
+}
+
+/* ==========================================
+   PASSWORD REQUIREMENTS (Reset Password)
+========================================== */
+.password-requirements {
+  margin-top: 12px;
+  padding: 14px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.requirements-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 10px;
+}
+
+.requirements-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.requirements-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: var(--gray-600);
+  transition: color 0.2s ease;
+}
+
+.requirements-list li.met {
+  color: var(--success);
+}
+
+.req-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+/* ==========================================
+   CODE INPUT (Reset Password)
+========================================== */
+.code-input {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.2em;
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* ==========================================
+   PASSWORD WRAPPER (Toggle visibility)
+========================================== */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper .form-input {
+  padding-right: 45px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+  transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+  color: var(--gray-600);
+}
+
+.toggle-password svg {
+  width: 20px;
+  height: 20px;
+}
+
+.eye-closed {
+  display: none;
+}
+
+/* ==========================================
    RESPONSIVIDADE - MOBILE FIRST
 ========================================== */
 
@@ -361,6 +516,36 @@ h1 {
     padding: 10px;
     font-size: 0.875rem;
     border-radius: 12px;
+  }
+  
+  .info-box {
+    padding: 14px 12px;
+    gap: 10px;
+  }
+  
+  .info-title {
+    font-size: 0.8125rem;
+  }
+  
+  .info-list li {
+    font-size: 0.75rem;
+    padding-left: 14px;
+  }
+  
+  .password-requirements {
+    padding: 12px;
+  }
+  
+  .requirements-title {
+    font-size: 0.75rem;
+  }
+  
+  .requirements-list li {
+    font-size: 0.75rem;
+  }
+  
+  .code-input {
+    font-size: 1rem;
   }
 }
 
