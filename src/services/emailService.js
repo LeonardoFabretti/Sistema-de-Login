@@ -70,7 +70,26 @@ const sendVerificationEmail = async (user, verificationToken) => {
 /**
  * Enviar email de reset de senha
  */
-const sendPasswordResetEmail = async (user, resetToken) => {
+const sendPasswordResetEmail = async (user, resetCode) => {
+  console.log('\n========================================');
+  console.log('📧 EMAIL DE RECUPERAÇÃO DE SENHA');
+  console.log('========================================');
+  console.log(`Para: ${user.email}`);
+  console.log(`Nome: ${user.name}`);
+  console.log(`Assunto: Código de Recuperação de Senha`);
+  console.log('----------------------------------------');
+  console.log(`Olá ${user.name},`);
+  console.log('');
+  console.log('Você solicitou a recuperação de senha.');
+  console.log('');
+  console.log(`SEU CÓDIGO DE VERIFICAÇÃO:`);
+  console.log(`⭐ ${resetCode} ⭐`);
+  console.log('');
+  console.log('Este código expira em 15 minutos.');
+  console.log('');
+  console.log('Se você não solicitou isso, ignore este email.');
+  console.log('========================================\n');
+  
   // const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
   
   // const html = `

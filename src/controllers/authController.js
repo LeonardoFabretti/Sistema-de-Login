@@ -218,6 +218,90 @@ const refreshToken = async (req, res, next) => {
 };
 
 /**
+ * @desc    Solicitar código de recuperação de senha
+ * @route   POST /api/auth/forgot-password
+ * @access  Public
+ * 
+ * SEGURANÇA:
+ * - Gera código aleatório de 6 dígitos
+ * - Código expira em 15 minutos
+ * - Salva hash do código no banco
+ * - Envia código por email
+ * - Não revela se email existe (segurança)
+ */
+const forgotPassword = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    
+    console.log('[AUTH CONTROLLER] Solicitação de recuperação de senha para:', email);
+    
+    // Chamar service de forgot password
+    // O service irá:
+    // 1. Verificar se email existe
+    // 2. Gerar código de 6 dígitos
+    // 3. Salvar código hasheado no banco com expiração
+    // 4. Enviar email com código
+    // 5. Retornar sempre sucesso (não revela se email existe)
+    await authService.requestPasswordReset(email);
+    
+    // SEMPRE retorna sucesso, mesmo se email não existir
+    // Isso previne que atacantes descubram quais emails estão cadastrados
+    res.status(200).json({
+      success: true,
+      message: 'Se o email existir, você receberá um código de recuperação em breve.',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Redefinir senha usando código
+ * @route   POST /api/auth/reset-password
+ * @access  Public
+ * 
+ * SEGURANÇA:
+ * - Valida código de 6 dígitos
+ * - Verifica expiração (15 minutos)
+ * - Valida força da nova senha
+ * - Hashea nova senha com bcrypt
+ * - Invalida código após uso
+ */
+const resetPassword = async (req, res, next) => {
+  try {
+    const { email, code, newPassword } = req.body;
+    
+    console.log('[AUTH CONTROLLER] Redefinição de senha para:', email);
+    
+    // Validação básica
+    if (!email || !code || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email, código e nova senha são obrigatórios',
+      });
+    }
+    
+    // Chamar service de reset password
+    // O service irá:
+    // 1. Buscar usuário por email
+    // 2. Verificar se código existe e não expirou
+    // 3. Comparar código fornecido com hash do banco
+    // 4. Validar força da nova senha
+    // 5. Hashear nova senha
+    // 6. Atualizar senha no banco
+    // 7. Invalidar código de reset
+    await authService.resetPasswordWithCode(email, code, newPassword);
+    
+    res.status(200).json({
+      success: true,
+      message: 'Senha redefinida com sucesso! Faça login com sua nova senha.',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * @desc    Obter dados do usuário logado
  * @route   GET /api/auth/me
  * @access  Private
@@ -240,5 +324,7 @@ module.exports = {
   login,
   logout,
   refreshToken,
+  forgotPassword,
+  resetPassword,
   getMe,
 };

@@ -62,19 +62,19 @@ router.post(
 );
 
 // POST /api/auth/forgot-password
-// Solicitar reset de senha
-// router.post(
-//   '/forgot-password',
-//   validate(emailSchema),
-//   authController.forgotPassword
-// );
+// Solicitar código de recuperação de senha
+router.post(
+  '/forgot-password',
+  validate(emailSchema),
+  authController.forgotPassword
+);
 
-// POST /api/auth/reset-password/:token
-// Resetar senha
-// router.post(
-//   '/reset-password/:token',
-//   authController.resetPassword
-// );
+// POST /api/auth/reset-password
+// Resetar senha usando código
+router.post(
+  '/reset-password',
+  authController.resetPassword
+);
 
 /**
  * Rotas protegidas (requerem autenticação)

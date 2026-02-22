@@ -409,6 +409,62 @@ const setPasswordResetToken = async (userId, token, expiresAt) => {
 };
 
 /**
+ * Salva código de recuperação de senha (hasheado)
+ * 
+ * @param {string} userId - ID do usuário
+ * @param {string} hashedCode - Código hasheado com bcrypt
+ * @param {Date} expiresAt - Data de expiração (15 minutos)
+ */
+const savePasswordResetCode = async (userId, hashedCode, expiresAt) => {
+  await query(
+    `UPDATE users 
+     SET password_reset_token = $2,
+         password_reset_expire = $3,
+         updated_at = NOW()
+     WHERE id = $1`,
+    [userId, hashedCode, expiresAt]
+  );
+};
+
+/**
+ * Busca usuário por email incluindo código de reset
+ * 
+ * @param {string} email - Email do usuário
+ * @returns {Promise<Object|null>} Usuário com código de reset ou null
+ */
+const findByEmailWithResetCode = async (email) => {
+  const normalizedEmail = email.toLowerCase().trim();
+  
+  const result = await query(
+    `SELECT id, name, email, role, is_active, is_email_verified,
+            password_reset_token as password_reset_code, 
+            password_reset_expire as password_reset_expires,
+            created_at, updated_at
+     FROM users 
+     WHERE email = $1`,
+    [normalizedEmail]
+  );
+  
+  return result.rows[0] || null;
+};
+
+/**
+ * Limpa código de recuperação de senha
+ * 
+ * @param {string} userId - ID do usuário
+ */
+const clearPasswordResetCode = async (userId) => {
+  await query(
+    `UPDATE users 
+     SET password_reset_token = NULL,
+         password_reset_expire = NULL,
+         updated_at = NOW()
+     WHERE id = $1`,
+    [userId]
+  );
+};
+
+/**
  * ============================================
  * LISTAGEM E PAGINAÇÃO
  * ============================================
@@ -573,6 +629,7 @@ module.exports = {
   findById,
   findByEmail,
   findByEmailWithPassword,
+  findByEmailWithResetCode,
   findAll,
   
   // Autenticação
@@ -588,6 +645,8 @@ module.exports = {
   updatePassword,
   markEmailAsVerified,
   setPasswordResetToken,
+  savePasswordResetCode,
+  clearPasswordResetCode,
   
   // Ativar/Desativar
   deactivate,

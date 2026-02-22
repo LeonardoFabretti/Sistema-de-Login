@@ -11,7 +11,9 @@
 
 const User = require('../models/User');
 const tokenService = require('./tokenService');
+const emailService = require('./emailService');
 const logger = require('../utils/logger');
+const bcrypt = require('bcryptjs');
 
 /**
  * Registrar novo usuário
@@ -182,9 +184,146 @@ const updatePassword = async (userId, currentPassword, newPassword) => {
   }
 };
 
+/**
+ * Solicitar código de recuperação de senha
+ * 
+ * SEGURANÇA:
+ * - Gera código aleatório de 6 dígitos
+ * - Código expira em 15 minutos
+ * - Salva hash do código no banco (não salva código em texto plano)
+ * - Envia código por email
+ * - NÃO revela se email existe (sempre retorna sucesso)
+ * 
+ * @param {string} email - Email do usuário
+ */
+const requestPasswordReset = async (email) => {
+  try {
+    console.log('[AUTH SERVICE] Solicitando reset de senha para:', email);
+    
+    // 1. Buscar usuário por email
+    const user = await User.findByEmail(email);
+    
+    // SEGURANÇA: Se usuário não existe, retorna sem erro
+    // Isso previne que atacantes descubram quais emails estão cadastrados
+    if (!user) {
+      console.log('[AUTH SERVICE] Email não encontrado (retornando sucesso por segurança)');
+      return;
+    }
+    
+    // 2. Gerar código de 6 dígitos
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log('[AUTH SERVICE] Código gerado:', resetCode);
+    
+    // 3. Hashear código com bcrypt
+    const hashedCode = await bcrypt.hash(resetCode, 10);
+    
+    // 4. Definir expiração (15 minutos)
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+    
+    // 5. Salvar código hasheado e expiração no banco
+    await User.savePasswordResetCode(user.id, hashedCode, expiresAt);
+    console.log('[AUTH SERVICE] Código salvo no banco');
+    
+    // 6. Enviar email com código
+    await emailService.sendPasswordResetEmail(user, resetCode);
+    console.log('[AUTH SERVICE] Email enviado com código de reset');
+    
+    // 7. Logar evento
+    logger.info(`[AUTH] Código de reset solicitado | Email: ${email} | UserID: ${user.id} | Expira: ${expiresAt.toISOString()}`);
+    
+  } catch (error) {
+    logger.error('[AUTH SERVICE] Erro ao solicitar reset de senha:', error);
+    // NÃO propaga erro para não revelar se email existe
+    // throw error;
+  }
+};
+
+/**
+ * Redefinir senha usando código de verificação
+ * 
+ * SEGURANÇA:
+ * - Valida código de 6 dígitos
+ * - Verifica expiração (15 minutos)
+ * - Compara código fornecido com hash no banco
+ * - Valida força da nova senha
+ * - Hasheia nova senha com bcrypt
+ * - Invalida código após uso
+ * 
+ * @param {string} email - Email do usuário
+ * @param {string} code - Código de 6 dígitos
+ * @param {string} newPassword - Nova senha
+ */
+const resetPasswordWithCode = async (email, code, newPassword) => {
+  try {
+    console.log('[AUTH SERVICE] Redefinindo senha para:', email);
+    
+    // 1. Buscar usuário por email
+    const user = await User.findByEmailWithResetCode(email);
+    
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+    
+    // 2. Verificar se existe código de reset
+    if (!user.password_reset_code || !user.password_reset_expires) {
+      throw new Error('Código de recuperação inválido ou expirado');
+    }
+    
+    // 3. Verificar se código expirou
+    const now = new Date();
+    const expiresAt = new Date(user.password_reset_expires);
+    
+    if (now > expiresAt) {
+      console.log('[AUTH SERVICE] Código expirado');
+      // Limpar código expirado
+      await User.clearPasswordResetCode(user.id);
+      throw new Error('Código de recuperação expirado. Solicite um novo código.');
+    }
+    
+    // 4. Comparar código fornecido com hash no banco
+    const isCodeValid = await bcrypt.compare(code, user.password_reset_code);
+    
+    if (!isCodeValid) {
+      console.log('[AUTH SERVICE] Código inválido');
+      throw new Error('Código de recuperação inválido');
+    }
+    
+    // 5. Validar força da nova senha
+    if (newPassword.length < 8) {
+      throw new Error('A senha deve ter no mínimo 8 caracteres');
+    }
+    
+    const hasUppercase = /[A-Z]/.test(newPassword);
+    const hasLowercase = /[a-z]/.test(newPassword);
+    const hasNumber = /[0-9]/.test(newPassword);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(newPassword);
+    
+    if (!hasUppercase || !hasLowercase || !hasNumber || !hasSpecial) {
+      throw new Error('A senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais');
+    }
+    
+    // 6. Atualizar senha no banco (será hasheada automaticamente)
+    await User.updatePassword(user.id, newPassword);
+    console.log('[AUTH SERVICE] Senha atualizada');
+    
+    // 7. Limpar código de reset (invalidar após uso)
+    await User.clearPasswordResetCode(user.id);
+    console.log('[AUTH SERVICE] Código invalidado');
+    
+    // 8. Logar evento
+    logger.info(`[AUTH] Senha redefinida via código | Email: ${email} | UserID: ${user.id} | Timestamp: ${new Date().toISOString()}`);
+    
+  } catch (error) {
+    logger.error('[AUTH SERVICE] Erro ao redefinir senha:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getCurrentUser,
   updatePassword,
+  requestPasswordReset,
+  resetPasswordWithCode,
 };
