@@ -382,7 +382,7 @@
             // Se não há token, usuário não está logado
             if (!token) {
                 console.log('❌ Token não encontrado. Redirecionando para login...');
-                window.location.href = 'login.html';
+                window.location.href = 'index.html';
                 return;
             }
 
@@ -460,7 +460,7 @@
             console.log('✅ Logout completo. Redirecionando...');
             
             // Força redirecionamento (evita cache)
-            window.location.replace('login.html');
+            window.location.replace('index.html');
         }
 
         // Event listener para botão de logout
