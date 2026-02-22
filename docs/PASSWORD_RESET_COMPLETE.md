@@ -178,7 +178,7 @@ router.post(
 - ✅ Usa regex simples: `/^[^\s@]+@[^\s@]+\.[^\s@]+$/`
 - ✅ Mensagens de erro amigáveis
 - ✅ Loading states
-- ✅ Redirecionamento para `redefinir-senha.html`
+- ✅ Redirecionamento para `reset-password.html`
 
 **Fluxo:**
 1. Usuário digita email
