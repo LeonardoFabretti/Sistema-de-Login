@@ -18,7 +18,7 @@
    =================================== */
 
 const CONFIG = {
-  API_URL: 'https://empowering-solace-production-c913.up.railway.app/auth/register',
+  API_URL: '/api/auth/register',
   MIN_NAME_LENGTH: 3,
   MIN_PASSWORD_LENGTH: 8,
 };
@@ -445,14 +445,11 @@ async function submitRegister(data) {
     
     if (response.ok) {
       // Sucesso
-      showAlert('✓ Conta criada com sucesso! Redirecionando...', 'success');
+      showAlert('✓ Conta criada com sucesso! Redirecionando para login...', 'success');
       
-     showAlert('✓ Conta criada com sucesso! Faça login para continuar.', 'success');
-
-setTimeout(() => {
-  window.location.href = 'index.html'; // página de login
-}, 1500);
-
+      setTimeout(() => {
+        window.location.href = 'index.html'; // página de login
+      }, 1500);
       
     } else {
       // Erro do servidor
