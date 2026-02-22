@@ -41,11 +41,31 @@ app.use(helmet({
 }));
 
 // CORS: Controle de origem cruzada
+// Configuração para suportar GitHub Pages (produção) e localhost (desenvolvimento)
+const allowedOrigins = process.env.CORS_ORIGIN 
+  ? process.env.CORS_ORIGIN.split(',').map(origin => origin.trim())
+  : ['http://localhost:5000', 'http://127.0.0.1:5000'];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || true,
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: function (origin, callback) {
+    // Permitir requisições sem origin (mobile apps, Postman, etc)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      // Origem está na lista permitida
+      callback(null, true);
+    } else {
+      // Origem não permitida
+      console.warn(`❌ CORS blocked: Origin ${origin} not allowed`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true, // Permite envio de cookies e headers de autenticação
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie'],
+  optionsSuccessStatus: 204, // Para navegadores legados
+  maxAge: 86400 // Cache do preflight por 24h
 }));
 
 // Rate limiting global

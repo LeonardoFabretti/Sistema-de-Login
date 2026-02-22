@@ -445,6 +445,7 @@ async function submitRegister(data) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
+      credentials: 'include', // Incluir cookies (consistência com login)
     });
     
     const result = await response.json();
