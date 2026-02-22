@@ -279,7 +279,7 @@ FRONTEND_URL=http://localhost:3000
 ### Parte 1: Solicitação de Código
 
 ```
-1. Usuário → esqueceu-a-senha.html
+1. Usuário → forgot-password.html
    ↓
 2. Digite email → Validação frontend (regex)
    ↓
@@ -297,13 +297,13 @@ FRONTEND_URL=http://localhost:3000
    ↓
 5. Frontend salva email (localStorage)
    ↓
-6. Redireciona → redefinir-senha.html
+6. Redireciona → reset-password.html
 ```
 
 ### Parte 2: Reset de Senha
 
 ```
-1. Usuário → redefinir-senha.html
+1. Usuário → reset-password.html
    ↓
 2. Lê email do localStorage
    ↓
@@ -513,8 +513,8 @@ FRONTEND_URL=http://localhost:3000       # URL do frontend (para links em emails
 
 **URLs finais:**
 - Login: `https://leonardofabretti.github.io/Sistema-de-Login/`
-- Esqueceu senha: `.../esqueceu-a-senha.html`
-- Redefinir senha: `.../redefinir-senha.html`
+- Forgot Password: `.../forgot-password.html`
+- Reset Password: `.../reset-password.html`
 
 ---
 
