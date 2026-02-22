@@ -105,7 +105,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Rota raiz: Redirecionar para página de login
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/login.html'));
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // Health check
