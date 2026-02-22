@@ -20,6 +20,7 @@ const {
   registerSchema,
   loginSchema,
   emailSchema,
+  resetPasswordSchema,
 } = require('../validators/authValidator');
 
 const router = express.Router();
@@ -63,6 +64,9 @@ router.post(
 
 // POST /api/auth/forgot-password
 // Solicitar código de recuperação de senha
+// SEGURANÇA:
+// 1. validate(emailSchema) - Valida formato de email
+// 2. authController.forgotPassword - Gera código e envia email
 router.post(
   '/forgot-password',
   validate(emailSchema),
@@ -71,8 +75,12 @@ router.post(
 
 // POST /api/auth/reset-password
 // Resetar senha usando código
+// SEGURANÇA:
+// 1. validate(resetPasswordSchema) - Valida email, código e senha
+// 2. authController.resetPassword - Valida código e atualiza senha
 router.post(
   '/reset-password',
+  validate(resetPasswordSchema),
   authController.resetPassword
 );
 

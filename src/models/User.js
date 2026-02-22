@@ -336,6 +336,26 @@ const updatePassword = async (userId, newPassword) => {
 };
 
 /**
+ * Atualiza password_changed_at
+ * 
+ * SEGURANÇA:
+ * - Marca quando a senha foi alterada
+ * - Usado para invalidar tokens antigos
+ * - Previne reuso de tokens após troca de senha
+ * 
+ * @param {string} userId - ID do usuário
+ */
+const updatePasswordChangedAt = async (userId) => {
+  await query(
+    `UPDATE users 
+     SET password_changed_at = NOW(),
+         updated_at = NOW()
+     WHERE id = $1`,
+    [userId]
+  );
+};
+
+/**
  * Atualiza dados básicos do usuário
  * 
  * @param {string} userId - ID do usuário
@@ -643,6 +663,7 @@ module.exports = {
   // Atualizar
   update,
   updatePassword,
+  updatePasswordChangedAt,
   markEmailAsVerified,
   setPasswordResetToken,
   savePasswordResetCode,

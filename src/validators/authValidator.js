@@ -102,42 +102,78 @@ const loginSchema = Joi.object({
 /**
  * Schema de validação para atualização de senha
  */
-const updatePasswordSchema = {}; // Joi.object({
-//   currentPassword: Joi.string()
-//     .required()
-//     .messages({
-//       'any.required': 'Senha atual é obrigatória',
-//     }),
-//   
-//   newPassword: passwordSchema,
-//   
-//   confirmNewPassword: Joi.string()
-//     .valid(Joi.ref('newPassword'))
-//     .required()
-//     .messages({
-//       'any.only': 'Senhas não coincidem',
-//       'any.required': 'Confirmação de senha é obrigatória',
-//     }),
-// });
+const updatePasswordSchema = Joi.object({
+  currentPassword: Joi.string()
+    .required()
+    .messages({
+      'any.required': 'Senha atual é obrigatória',
+    }),
+  
+  newPassword: passwordSchema,
+  
+  confirmNewPassword: Joi.string()
+    .valid(Joi.ref('newPassword'))
+    .required()
+    .messages({
+      'any.only': 'Senhas não coincidem',
+      'any.required': 'Confirmação de senha é obrigatória',
+    }),
+});
 
 /**
- * Schema de validação para email
+ * Schema de validação para email (forgot password)
+ * 
+ * SEGURANÇA:
+ * - Valida formato de email
+ * - Normaliza para lowercase
+ * - Mensagens genéricas (não revela se email existe)
  */
-const emailSchema = {}; // Joi.object({
-//   email: Joi.string()
-//     .trim()
-//     .lowercase()
-//     .email()
-//     .required()
-//     .messages({
-//       'string.email': 'Email inválido',
-//       'any.required': 'Email é obrigatório',
-//     }),
-// });
+const emailSchema = Joi.object({
+  email: Joi.string()
+    .trim()
+    .lowercase()
+    .email()
+    .required()
+    .messages({
+      'string.email': 'Email inválido',
+      'any.required': 'Email é obrigatório',
+    }),
+});
+
+/**
+ * Schema de validação para reset de senha
+ * 
+ * SEGURANÇA:
+ * - Valida código de 6 dígitos
+ * - Valida força da nova senha
+ * - Valida email
+ */
+const resetPasswordSchema = Joi.object({
+  email: Joi.string()
+    .trim()
+    .lowercase()
+    .email()
+    .required()
+    .messages({
+      'string.email': 'Email inválido',
+      'any.required': 'Email é obrigatório',
+    }),
+  
+  code: Joi.string()
+    .pattern(/^\d{6}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Código deve conter exatamente 6 dígitos',
+      'any.required': 'Código é obrigatório',
+    }),
+  
+  newPassword: passwordSchema,
+});
 
 module.exports = {
   registerSchema,
   loginSchema,
   updatePasswordSchema,
   emailSchema,
+  resetPasswordSchema,
 };

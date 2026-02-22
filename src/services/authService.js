@@ -10,6 +10,7 @@
  */
 
 const User = require('../models/User');
+const PasswordReset = require('../models/PasswordReset');
 const tokenService = require('./tokenService');
 const emailService = require('./emailService');
 const logger = require('../utils/logger');
@@ -190,7 +191,8 @@ const updatePassword = async (userId, currentPassword, newPassword) => {
  * SEGURANÇA:
  * - Gera código aleatório de 6 dígitos
  * - Código expira em 15 minutos
- * - Salva hash do código no banco (não salva código em texto plano)
+ * - Salva hash do código no banco password_resets (não salva código em texto plano)
+ * - Apaga códigos antigos do mesmo email
  * - Envia código por email
  * - NÃO revela se email existe (sempre retorna sucesso)
  * 
@@ -220,9 +222,10 @@ const requestPasswordReset = async (email) => {
     // 4. Definir expiração (15 minutos)
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     
-    // 5. Salvar código hasheado e expiração no banco
-    await User.savePasswordResetCode(user.id, hashedCode, expiresAt);
-    console.log('[AUTH SERVICE] Código salvo no banco');
+    // 5. Salvar código hasheado na tabela password_resets
+    // SEGURANÇA: Apaga automaticamente códigos antigos do mesmo email
+    await PasswordReset.create(email, hashedCode, expiresAt);
+    console.log('[AUTH SERVICE] Código salvo na tabela password_resets');
     
     // 6. Enviar email com código
     await emailService.sendPasswordResetEmail(user, resetCode);
@@ -248,6 +251,7 @@ const requestPasswordReset = async (email) => {
  * - Valida força da nova senha
  * - Hasheia nova senha com bcrypt
  * - Invalida código após uso
+ * - Atualiza password_changed_at
  * 
  * @param {string} email - Email do usuário
  * @param {string} code - Código de 6 dígitos
@@ -257,38 +261,29 @@ const resetPasswordWithCode = async (email, code, newPassword) => {
   try {
     console.log('[AUTH SERVICE] Redefinindo senha para:', email);
     
-    // 1. Buscar usuário por email
-    const user = await User.findByEmailWithResetCode(email);
+    // 1. Buscar código de reset na tabela password_resets
+    const resetRecord = await PasswordReset.findByEmail(email);
     
-    if (!user) {
-      throw new Error('Usuário não encontrado');
-    }
-    
-    // 2. Verificar se existe código de reset
-    if (!user.password_reset_code || !user.password_reset_expires) {
+    if (!resetRecord) {
       throw new Error('Código de recuperação inválido ou expirado');
     }
     
-    // 3. Verificar se código expirou
-    const now = new Date();
-    const expiresAt = new Date(user.password_reset_expires);
-    
-    if (now > expiresAt) {
-      console.log('[AUTH SERVICE] Código expirado');
-      // Limpar código expirado
-      await User.clearPasswordResetCode(user.id);
-      throw new Error('Código de recuperação expirado. Solicite um novo código.');
-    }
-    
-    // 4. Comparar código fornecido com hash no banco
-    const isCodeValid = await bcrypt.compare(code, user.password_reset_code);
+    // 2. Validar código fornecido com hash no banco
+    const isCodeValid = await PasswordReset.validateCode(code, resetRecord.code_hash);
     
     if (!isCodeValid) {
       console.log('[AUTH SERVICE] Código inválido');
       throw new Error('Código de recuperação inválido');
     }
     
-    // 5. Validar força da nova senha
+    // 3. Buscar usuário por email
+    const user = await User.findByEmail(email);
+    
+    if (!user) {
+      throw new Error('Usuário não encontrado');
+    }
+    
+    // 4. Validar força da nova senha
     if (newPassword.length < 8) {
       throw new Error('A senha deve ter no mínimo 8 caracteres');
     }
@@ -302,12 +297,16 @@ const resetPasswordWithCode = async (email, code, newPassword) => {
       throw new Error('A senha deve conter letras maiúsculas, minúsculas, números e caracteres especiais');
     }
     
-    // 6. Atualizar senha no banco (será hasheada automaticamente)
+    // 5. Atualizar senha no banco (será hasheada automaticamente)
     await User.updatePassword(user.id, newPassword);
     console.log('[AUTH SERVICE] Senha atualizada');
     
-    // 7. Limpar código de reset (invalidar após uso)
-    await User.clearPasswordResetCode(user.id);
+    // 6. Atualizar password_changed_at
+    await User.updatePasswordChangedAt(user.id);
+    console.log('[AUTH SERVICE] password_changed_at atualizado');
+    
+    // 7. Invalidar código (deletar da tabela password_resets)
+    await PasswordReset.deleteByEmail(email);
     console.log('[AUTH SERVICE] Código invalidado');
     
     // 8. Logar evento
