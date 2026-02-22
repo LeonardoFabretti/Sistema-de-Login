@@ -184,6 +184,8 @@ Equipe de Segurança
  * @param {string} resetCode - Código de 6 dígitos
  */
 const sendPasswordResetEmail = async (user, resetCode) => {
+  console.log('🔥 CÓDIGO DE RESET GERADO:', resetCode);
+  
   const text = `
 Olá ${user.name},
 
