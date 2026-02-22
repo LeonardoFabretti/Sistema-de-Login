@@ -29,6 +29,17 @@ const handleDuplicateFieldsDB = (err) => {
 };
 
 /**
+ * Tratamento de erros de duplicação do PostgreSQL
+ */
+const handleDuplicateFieldsPostgreSQL = (err) => {
+  // PostgreSQL error code 23505 = unique_violation
+  if (err.message && err.message.includes('email')) {
+    return { message: 'Este email já está cadastrado. Faça login ou use outro email.', statusCode: 409 };
+  }
+  return { message: 'Valor duplicado. Este dado já está em uso.', statusCode: 409 };
+};
+
+/**
  * Tratamento de erros de validação do MongoDB
  */
 const handleValidationErrorDB = (err) => {
@@ -95,21 +106,34 @@ const errorHandler = (err, req, res, next) => {
     let error = { ...err };
     error.message = err.message;
     
-    // Tratar erros específicos
+    // Tratar erros específicos do PostgreSQL
+    if (err.code === '23505') {  // PostgreSQL: unique violation
+      const handled = handleDuplicateFieldsPostgreSQL(err);
+      error.message = handled.message;
+      error.statusCode = handled.statusCode;
+      error.isOperational = true;
+    }
+    
+    // Tratar erros específicos do MongoDB (legacy)
     if (err.name === 'CastError') {
       const handled = handleCastErrorDB(err);
       error.message = handled.message;
       error.statusCode = handled.statusCode;
+      error.isOperational = true;
     }
-    if (err.code === 11000) {
-      const handled = handleDuplicateFieldsDB(err);
+      error.isOperational = true;
+    }
+    if (err.name === 'JsonWebTokenError') {
+      const handled = handleJWTError();
       error.message = handled.message;
       error.statusCode = handled.statusCode;
+      error.isOperational = true;
     }
-    if (err.name === 'ValidationError') {
-      const handled = handleValidationErrorDB(err);
+    if (err.name === 'TokenExpiredError') {
+      const handled = handleJWTExpiredError();
       error.message = handled.message;
       error.statusCode = handled.statusCode;
+      error.isOperational = true;
     }
     if (err.name === 'JsonWebTokenError') {
       const handled = handleJWTError();

@@ -619,6 +619,15 @@ function initEventListeners() {
       handleSubmit(e);
     }
   });
+  
+  // Link para login (garantir que funcione)
+  const loginLink = document.querySelector('.btn-login-link');
+  if (loginLink) {
+    loginLink.addEventListener('click', (e) => {
+      console.log('🔗 Link "Fazer Login" clicado');
+      // Deixa o comportamento padrão do link funcionar
+    });
+  }
 }
 
 /* ===================================
