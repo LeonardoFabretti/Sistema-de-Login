@@ -320,6 +320,80 @@
                 margin-top: 16px;
             }
         }
+
+        /* Celulares muito pequenos - 320px */
+        @media (max-width: 320px) {
+            .container {
+                padding: 20px 12px;
+                border-radius: 16px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .success-icon {
+                width: 52px;
+                height: 52px;
+            }
+
+            .success-icon svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.875rem;
+            }
+
+            .info-box {
+                padding: 10px;
+            }
+
+            .info-box li {
+                font-size: 0.8125rem;
+            }
+        }
+
+        /* Acessibilidade */
+        *:focus-visible {
+            outline: 3px solid #A855F7;
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            body {
+                animation: none;
+            }
+
+            .container {
+                animation: none;
+            }
+
+            .success-icon {
+                animation: none;
+            }
+        }
+
+        @media (prefers-contrast: high) {
+            .container {
+                border: 2px solid #1f2937;
+            }
+
+            .btn {
+                border: 2px solid transparent;
+            }
+        }
     </style>
 </head>
 <body>
