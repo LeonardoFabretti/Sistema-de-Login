@@ -523,7 +523,7 @@ function init() {
         // Se não tem email, redirecionar para forgot-password
         showErrorAlert('Sessão expirada. Por favor, solicite um novo código.');
         setTimeout(() => {
-            window.location.href = 'esqueceu-a-senha.html';
+            window.location.href = 'forgot-password.html';
         }, 2000);
         return;
     }

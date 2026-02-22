@@ -243,7 +243,7 @@ async function handleSubmit(e) {
         
         // Redirecionar após 2 segundos
         setTimeout(() => {
-            window.location.href = 'redefinir-senha.html';
+            window.location.href = 'reset-password.html';
         }, 2000);
         
     } catch (error) {
