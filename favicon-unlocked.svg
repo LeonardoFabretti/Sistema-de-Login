@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="gradient-unlocked" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10B981"/>
+      <stop offset="1" stop-color="#34D399"/>
+    </linearGradient>
+  </defs>
+  <!-- Fundo do ícone -->
+  <rect width="48" height="48" rx="12" fill="url(#gradient-unlocked)"/>
+  <!-- Corpo do cadeado -->
+  <rect x="14" y="24" width="20" height="14" rx="2" fill="white"/>
+  <!-- Arco do cadeado ABERTO (inclinado para o lado direito) -->
+  <path d="M16 24V22C16 18.69 18.69 16 22 16C25.31 16 28 18.69 28 22" stroke="white" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Buraco da fechadura -->
+  <circle cx="24" cy="30" r="2" fill="#10B981"/>
+  <rect x="23" y="30" width="2" height="4" fill="#10B981"/>
+</svg>
