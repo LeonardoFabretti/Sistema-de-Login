@@ -423,7 +423,7 @@ async function handleSubmit(e) {
         
         // Redirecionar para login após 2 segundos
         setTimeout(() => {
-            window.location.href = 'index.html';
+            window.location.href = '../index.html';
         }, 2000);
         
     } catch (error) {
